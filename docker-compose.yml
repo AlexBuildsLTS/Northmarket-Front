@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: north_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=mariadb
+      - DB_NAME=north_db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - JWT_SECRET=QBs7RUvz/FmzHKd5BZwKdI6G+hJbxKn2P7Ht3chuUKg=
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb_data:
